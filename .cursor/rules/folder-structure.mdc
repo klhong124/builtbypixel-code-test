@@ -1,0 +1,59 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+## Folder Structure Rules
+
+### 1. Entity-Based Organization
+Organize files by business entities (e.g., companies) rather than technical concerns.
+
+```
+app/
+├── tasks/
+│   ├── [status]/
+│   │   └── page.tsx
+│   ├── components/
+│   │   ├── tasks.card.tsx
+│   │   ├── tasks.list.tsx
+│   │   ├── tasks.filter.tsx
+│   │   ├── tasks.sorter.tsx
+│   │   └── index.ts
+│   ├── api/
+│   │   └── tasks.fetch.ts
+│   ├── hooks/
+│   │   └── useTasks.ts
+│   ├── utils/
+│   │   ├── task.helpers.ts
+│   │   └── index.ts
+│   ├── types/
+│   │   ├── task.type.ts
+│   │   └── task.api.type.ts
+│   └── tests/
+│       ├── task.card.test.tsx
+│       └── task.helpers.test.ts
+```
+
+### 2. Entity Folder Structure Rules
+
+#### Each Entity Should Contain:
+- **`components/`**: Entity-specific UI components
+- **`api/`**: Server-side API logic and data fetching
+- **`hooks/`**: Custom React hooks for entity operations
+- **`utils/`**: Entity-specific utility functions
+- **`types/`**: TypeScript interfaces and types (organized by domain)
+- **`tests/`**: Test files for the entity
+
+#### Naming Conventions:
+```
+✅ Good:
+- tasks.card.tsx
+- useTasks.ts
+- tasks.fetch.ts
+- tasks.helpers.ts
+
+❌ Avoid:
+- Card.tsx (too generic)
+- tasks.ts (unclear purpose)
+- helpers.ts (unclear scope)
+```
