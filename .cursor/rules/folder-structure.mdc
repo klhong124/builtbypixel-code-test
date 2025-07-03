@@ -19,8 +19,9 @@ app/
 │   │   ├── tasks.filter.tsx
 │   │   ├── tasks.sorter.tsx
 │   │   └── index.ts
-│   ├── api/
-│   │   └── tasks.fetch.ts
+│   ├── graphql/
+│   │   ├── tasks.mutation.ts
+│   │   └── tasks.query.ts
 │   ├── hooks/
 │   │   └── useTasks.ts
 │   ├── utils/
@@ -38,7 +39,7 @@ app/
 
 #### Each Entity Should Contain:
 - **`components/`**: Entity-specific UI components
-- **`api/`**: Server-side API logic and data fetching
+- **`graphql/`**: Server-side API logic and data fetching with graphql
 - **`hooks/`**: Custom React hooks for entity operations
 - **`utils/`**: Entity-specific utility functions
 - **`types/`**: TypeScript interfaces and types (organized by domain)

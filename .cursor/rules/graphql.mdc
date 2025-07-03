@@ -1,0 +1,92 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# GraphQL Rules
+
+## Schema Understanding
+1. Check @/.codegen/schema.ts to see available queries/mutations.
+2. Only use operations that exist in the schema.
+
+
+3. Split operations into separate files:
+   - `tasks.query.ts` for all queries related to task
+   - `tasks.mutation.ts` for all mutation related to tasks
+
+## Operation Naming
+1. Queries:
+   - Use camelCase
+   - start with a verb: `get`, `fetch`, `list`
+   - Be specific: `GetLikedTasks`
+
+2. Mutations:
+   - Use camelCase
+   - Start with a verb: `create`, `update`, `delete`
+   - Be specific: `likeTask`, `searchTask`
+
+## Operation Structure
+1. Server-Side Operations:
+   ```typescript
+   'use server';
+
+   import client from '@/utils/apolloClient';
+   import { gql } from '@apollo/client';
+   import { Type } from '@/.codegen/schema';
+
+   export async function operationName() {
+       const { data } = await client.query({
+           query: gql`query OperationName {
+               // Query fields
+           }`,
+           fetchPolicy: 'no-cache',
+       });
+
+       return data as Type;
+   }
+   ```
+
+2. Client-Side Operations:
+   ```typescript
+   import { gql } from '@apollo/client';
+   import { Type } from '@/.codegen/schema';
+
+   export const operationName = gql`
+       query OperationName {
+           // Query fields
+       }
+   `;
+   ```
+
+## Type Safety
+1. Always import types from `@/.codegen/schema`
+2. Use type assertions for server-side operations
+3. Use generated types for client-side operations
+
+## Error Handling
+1. Server-Side:
+   ```typescript
+   try {
+       const { data } = await client.query({...});
+       return data;
+   } catch (error) {
+       console.error('Operation failed:', error);
+       throw error;
+   }
+   ```
+
+2. Client-Side:
+   ```typescript
+   const { data, error } = useQuery(operationName);
+   if (error) {
+       // Handle error
+   }
+   ```
+
+## Best Practices
+1. Use `fetchPolicy: 'no-cache'` for server-side operations
+2. Keep queries focused and specific
+3. Use fragments for shared fields
+4. Document complex operations with comments
+5. Handle loading and error states
+6. Use proper typing for all operations
