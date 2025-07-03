@@ -27,9 +27,6 @@ app/
 │   ├── utils/
 │   │   ├── task.helpers.ts
 │   │   └── index.ts
-│   ├── types/
-│   │   ├── task.type.ts
-│   │   └── task.api.type.ts
 │   └── tests/
 │       ├── task.card.test.tsx
 │       └── task.helpers.test.ts
