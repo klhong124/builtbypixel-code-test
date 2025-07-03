@@ -5,7 +5,7 @@ import { extendTheme, type ChakraTheme } from "@chakra-ui/react";
 
 const extension: Partial<ChakraTheme> = {
   config: {
-    initialColorMode: "light",
+    initialColorMode: "system",
     useSystemColorMode: true,
   },
   styles: {

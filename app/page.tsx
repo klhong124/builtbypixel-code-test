@@ -1,14 +1,18 @@
 'use client'
 
-import { Box, Button, Center, Heading, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Heading, useColorMode, Text, IconButton } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { MoonIcon, SunIcon, HamburgerIcon, ArrowBackIcon } from "@chakra-ui/icons";
 
 export default function Home() {
+  const { colorMode, toggleColorMode } = useColorMode();
+
   return (
     <Center
       minH="100dvh"
       pos="relative"
+      zIndex={0}
     >
       <Box textAlign="center">
         <Heading
@@ -29,6 +33,14 @@ export default function Home() {
         >
           Hey there!
         </Heading>
+
+        <IconButton
+          aria-label="Toggle dark mode"
+          icon={colorMode === "light" ? <SunIcon /> : <MoonIcon />}
+          onClick={toggleColorMode}
+          variant="ghost"
+          size="md"
+        />
         <Text variant="muted" fontSize="sm" mb={4} letterSpacing="tight">
           Welcome to the Built by Pixel code test.
         </Text>
