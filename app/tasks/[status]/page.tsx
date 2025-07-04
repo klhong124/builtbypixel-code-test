@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation';
-import { getTasksByStatus, getTotalTask } from '../graphql/tasks.query';
+import { getTaskList, getTotalTask } from '../graphql/tasks.query';
 import { TaskList } from '../components';
 import { EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
 import { normalizeStatus } from '../utils';
+import { PAGE_SIZE } from '@tasks/utils';
 
 interface StatusPageProps {
     params: Promise<{
@@ -12,33 +13,30 @@ interface StatusPageProps {
 }
 
 export default async function StatusPage({ params, searchParams }: StatusPageProps) {
-    const { status } = await params;
-    const normalizedStatus = normalizeStatus(status);
+    const { status: statusParam } = await params;
+    const status = normalizeStatus(statusParam);
 
-    const pageSize = 10;
-    const page = Number(searchParams?.page) > 0 ? Number(searchParams.page) : 1;
-    const skip = (page - 1) * pageSize;
+    const page = Math.max(1, Number(searchParams?.page) || 1);
+    const skip = (page - 1) * PAGE_SIZE;
 
-    if (!normalizedStatus) {
+    if (!status) {
         redirect('/tasks');
     }
 
     const [totalTask, taskList] = await Promise.all([
-        getTotalTask({ filter: { status: normalizedStatus as EnumTaskStatus } }),
-        getTasksByStatus(normalizedStatus as EnumTaskStatus, {
-            limit: pageSize,
+        getTotalTask({ filter: { status: status as EnumTaskStatus } }),
+        getTaskList({
+            limit: PAGE_SIZE,
             skip,
-            sort: SortFindManyTaskInput.IdDesc,
+            filter: { status: status as EnumTaskStatus },
         })
     ]);
 
     return (
         <TaskList
             initialTasks={taskList}
-            initialSortField="title"
-            initialSortOrder={SortFindManyTaskInput.IdDesc}
             page={page}
-            pageSize={pageSize}
+            status={status}
             totalTask={totalTask}
         />
     );

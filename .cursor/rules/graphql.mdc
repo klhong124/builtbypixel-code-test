@@ -83,7 +83,7 @@ interface TaskListParams {
 1. Queries:
    - Use camelCase
    - start with a verb: `get`, `fetch`, `list`
-   - Be specific: `getTaskList`, `getTasksByStatus`
+   - Be specific: `getTaskList`
 
 2. Mutations:
    - Use camelCase

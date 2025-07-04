@@ -1,38 +1,31 @@
 'use client';
 
 import { Task, EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
-import { TaskCard } from './tasks.card';
-import { getTaskCountText } from '../utils';
-import { useTasks } from '../hooks/useTasks';
+import { TaskCard } from '@tasks/components/tasks.card';
+import { useTasks } from '@tasks/hooks/useTasks';
 import { cn } from '@/utils/cn';
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { PAGE_SIZE } from '@tasks/utils';
 
 interface TaskListProps {
     initialTasks: Task[];
     status?: EnumTaskStatus;
-    initialSortField?: string;
-    initialSortOrder?: SortFindManyTaskInput;
     page: number;
-    pageSize: number;
     totalTask: number;
 }
 
 export function TaskList({
     initialTasks,
     status,
-    initialSortField = 'title',
-    initialSortOrder = SortFindManyTaskInput.IdDesc,
     page,
-    pageSize,
     totalTask
 }: TaskListProps) {
     const router = useRouter();
     const { sortOrder, tasks, toggleSort, getSortButtonText } = useTasks({
         initialTasks,
-        status,
     });
-    const totalPages = Math.ceil(totalTask / pageSize);
+    const totalPages = Math.ceil(totalTask / PAGE_SIZE);
 
     const handleNext = () => {
         if (page < totalPages) {
@@ -64,7 +57,7 @@ export function TaskList({
         <div>
             <div className={cn("flex justify-between items-center mb-6")}>
                 <h2 className={cn("text-lg font-semibold text-gray-900 dark:text-gray-100")}>
-                    {getTaskCountText(tasks.length)}
+                    <span>Page {page} of {totalPages}</span>
                 </h2>
                 <button
                     onClick={toggleSort}
@@ -75,7 +68,7 @@ export function TaskList({
                         "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     )}
                 >
-                    {sortOrder === 'asc' ? (
+                    {sortOrder === 'a-z' ? (
                         <ChevronUp className={cn("w-4 h-4")} />
                     ) : (
                         <ChevronDown className={cn("w-4 h-4")} />

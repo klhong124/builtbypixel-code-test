@@ -1,7 +1,7 @@
 'use client';
 
 import { Task } from '@/.codegen/schema';
-import { formatDate, getStatusColor, getStatusLabel } from '../utils';
+import { formatDate, getStatusLabel } from '@/app/tasks/utils/tasks.helpers';
 import { cn } from '@/utils/cn';
 
 interface TaskCardProps {
@@ -30,7 +30,7 @@ export function TaskCard({ task }: TaskCardProps) {
                         {task.title}
                     </h3>
                     <span className={cn(getBadgeClass(task.status ?? undefined), "flex-shrink-0")}>
-                        {getStatusLabel(task.status ?? undefined) ?? 'Unknown'}
+                        {getStatusLabel(task.status)}
                     </span>
                 </div>
 

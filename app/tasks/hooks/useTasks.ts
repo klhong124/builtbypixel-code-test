@@ -1,45 +1,35 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Task, EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
-import { sortTasksByName } from '../utils/task.helpers';
+import { Task } from '@/.codegen/schema';
+import { SortOrder, sortTasksByName } from '../utils/tasks.helpers';
 
 interface UseTasksProps {
   initialTasks: Task[];
-  status?: EnumTaskStatus;
 }
 
-export function useTasks({ initialTasks, status }: UseTasksProps) {
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-
-  // Filter tasks by status if provided
-  const filteredTasks = useMemo(() => {
-    if (!status) return initialTasks;
-    return initialTasks.filter(task => task.status === status);
-  }, [initialTasks, status]);
+export function useTasks({ initialTasks }: UseTasksProps) {
+  const [sortOrder, setSortOrder] = useState<SortOrder>('a-z');
 
   // Sort tasks alphabetically by title
   const sortedTasks = useMemo(() => {
-    return sortTasksByName(filteredTasks, sortOrder);
-  }, [filteredTasks, sortOrder]);
+    return sortTasksByName(initialTasks, sortOrder);
+  }, [initialTasks, sortOrder]);
 
   // Toggle sort order
   const toggleSort = () => {
-    setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+    setSortOrder(prev => prev === 'a-z' ? 'z-a' : 'a-z');
   };
 
   // Get sort button text
   const getSortButtonText = () => {
-    return `Sort by Name (${sortOrder === 'asc' ? 'A-Z' : 'Z-A'})`;
+    return `Sort by Name (${sortOrder.toUpperCase()})`;
   };
 
-  // Get task count
-  const taskCount = sortedTasks.length;
 
   return {
     tasks: sortedTasks,
     sortOrder,
-    taskCount,
     toggleSort,
     getSortButtonText,
   };
