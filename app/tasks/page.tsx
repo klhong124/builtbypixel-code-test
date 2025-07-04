@@ -1,6 +1,7 @@
 import { getTaskList, getTotalTask } from './graphql/tasks.query';
 import { TaskList } from './components';
 import { PAGE_SIZE } from '@tasks/utils';
+import { TaskError } from './components/task.error';
 
 
 export default async function TasksPage({ searchParams }: { searchParams: Promise<{ page: string }> }) {
@@ -12,11 +13,14 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
         getTotalTask(),
         getTaskList({ limit: PAGE_SIZE, skip })
     ]);
+    if (taskList.error || totalTask.error) {
+        return <TaskError message={taskList.error || totalTask.error || 'Failed to fetch tasks. Please try again later.'} />;
+    }
     return (
         <TaskList
-            initialTasks={taskList}
+            initialTasks={taskList.data ||[]}
             page={page}
-            totalTask={totalTask}
+            totalTask={totalTask.data || 0}
         />
     );
 }

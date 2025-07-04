@@ -3,6 +3,7 @@ import { getTaskList, getTotalTask } from '@tasks/graphql/tasks.query';
 import { TaskList } from '@tasks/components';
 import { EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
 import { normalizeStatus } from '@tasks/utils';
+import { TaskError } from '@tasks/components/task.error';
 
 export default async function StatusPage({ params, searchParams }: { params: Promise<{ status: string }>, searchParams: Promise<{ page: string }> }) {
     const [
@@ -29,12 +30,16 @@ export default async function StatusPage({ params, searchParams }: { params: Pro
         })
     ]);
 
+    if (taskList.error || totalTask.error) {
+        return <TaskError message={taskList.error || totalTask.error || 'Failed to fetch tasks. Please try again later.'} />;
+    }
+
     return (
         <TaskList
-            initialTasks={taskList}
+            initialTasks={taskList.data || []}
             page={page}
             status={status}
-            totalTask={totalTask}
+            totalTask={totalTask.data || 0}
         />
     );
 }
