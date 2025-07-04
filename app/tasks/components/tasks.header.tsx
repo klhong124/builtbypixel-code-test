@@ -7,12 +7,9 @@ import { useState } from 'react';
 import { Moon, Sun, Filter, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/logo';
+import { TaskFilter } from './tasks.filter';
 
-interface TasksHeaderProps {
-    children?: React.ReactNode;
-}
-
-export function TasksHeader({ children }: TasksHeaderProps) {
+export function TasksHeader() {
     const { theme, setTheme } = useTheme();
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
@@ -97,7 +94,7 @@ export function TasksHeader({ children }: TasksHeaderProps) {
 
                             {/* Drawer Content */}
                             <div className="p-4 overflow-y-auto h-[calc(100vh-4rem)]">
-                                {children}
+                                <TaskFilter />
                             </div>
                         </motion.div>
                     </>

@@ -2,8 +2,9 @@
 
 import { motion } from 'motion/react';
 import { cn } from '@/utils/cn';
+import { TaskFilter } from './tasks.filter';
 
-export function TasksSidebar({ children }: { children: React.ReactNode }) {
+export function TasksSidebar() {
     return (
         <motion.aside
             initial={{ opacity: 0, x: -30 }}
@@ -15,7 +16,7 @@ export function TasksSidebar({ children }: { children: React.ReactNode }) {
             )}
         >
             <div className="h-full pr-2 overflow-y-auto">
-                {children}
+                <TaskFilter />
             </div>
         </motion.aside>
     );
