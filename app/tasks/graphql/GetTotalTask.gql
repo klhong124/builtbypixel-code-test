@@ -1,0 +1,5 @@
+query TaskList($limit: Int, $filter: FilterFindManyTaskInput) {
+    taskList(limit: $limit, filter: $filter) {
+      _id
+    }
+  }

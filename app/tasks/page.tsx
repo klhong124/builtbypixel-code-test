@@ -1,21 +1,32 @@
-import { getTaskList } from './graphql/tasks.query';
-import { TasksPageContent, TasksContent } from './components';
+import { getTaskList, getTotalTask } from './graphql/tasks.query';
+import { TaskList } from './components';
 import { SortFindManyTaskInput } from '@/.codegen/schema';
 
-async function TasksData() {
-    const { taskList } = await getTaskList({
-        limit: 10,
-        skip: 0,
-        sort: SortFindManyTaskInput.IdDesc,
-    });
-
-    return <TasksContent taskList={taskList} />;
+interface TasksPageProps {
+    searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default function TasksPage() {
+export default async function TasksPage({ searchParams }: TasksPageProps) {
+    const pageSize = 10;
+    const page = Number(searchParams?.page) > 0 ? Number(searchParams.page) : 1;
+    const skip = (page - 1) * pageSize;
+
+    const [totalTask, taskList] = await Promise.all([
+        getTotalTask(),
+        getTaskList({
+            limit: pageSize,
+            skip,
+            sort: SortFindManyTaskInput.IdDesc,
+        })
+    ]);
     return (
-        <TasksPageContent>
-            <TasksData />
-        </TasksPageContent>
+        <TaskList
+            initialTasks={taskList}
+            initialSortField="title"
+            initialSortOrder={SortFindManyTaskInput.IdDesc}
+            page={page}
+            pageSize={pageSize}
+            totalTask={totalTask}
+        />
     );
 }

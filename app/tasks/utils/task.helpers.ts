@@ -6,7 +6,10 @@ export type SortOrder = 'asc' | 'desc';
 // but server-side sorting is now preferred
 export function sortTasksByName(tasks: Task[], order: SortOrder = 'asc'): Task[] {
   return [...tasks].sort((a, b) => {
-    const comparison = a.title.localeCompare(b.title);
+    // Trim whitespace and normalize text for better sorting
+    const titleA = a.title.trim().toLowerCase();
+    const titleB = b.title.trim().toLowerCase();
+    const comparison = titleA.localeCompare(titleB);
     return order === 'asc' ? comparison : -comparison;
   });
 }

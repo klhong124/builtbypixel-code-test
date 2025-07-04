@@ -5,9 +5,25 @@ import client from '@/utils/apolloClient';
 
 // Import the GraphQL query from the .gql file using graphql-tag
 import TASK_LIST_QUERY from './TaskList.gql';
+import GET_TOTAL_TASK_QUERY from './GetTotalTask.gql';
 
-export interface TaskListResponse {
-  taskList: Task[];
+
+export async function getTotalTask(params: QueryTaskListArgs = {}) {
+// TODO: add get total task query in GraphQL
+  try {
+    const { data } = await client.query({
+      query: GET_TOTAL_TASK_QUERY,
+      variables: {
+        limit: 9999,
+        filter: params.filter || {},
+      },
+    });
+
+    return data.taskList.length;
+  } catch (error) {
+    console.error('Failed to fetch tasks:', error);
+    throw error;
+  }
 }
 
 export async function getTaskList(params: QueryTaskListArgs = {}) {
@@ -23,7 +39,7 @@ export async function getTaskList(params: QueryTaskListArgs = {}) {
       fetchPolicy: 'no-cache',
     });
 
-    return data as TaskListResponse;
+    return data.taskList as Task[];
   } catch (error) {
     console.error('Failed to fetch tasks:', error);
     throw error;
@@ -36,13 +52,5 @@ export async function getTasksByStatus(status: EnumTaskStatus, params: Omit<Quer
   return getTaskList({
     ...params,
     filter,
-  });
-}
-
-// Helper function to get tasks with sorting
-export async function getTasksWithSort(sortField: SortFindManyTaskInput, params: Omit<QueryTaskListArgs, 'sort'> = {}) {
-  return getTaskList({
-    ...params,
-    sort: sortField,
   });
 }

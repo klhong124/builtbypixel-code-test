@@ -2,26 +2,48 @@
 
 import { Task, EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
 import { TaskCard } from './tasks.card';
-import { getTaskCountText, getSortButtonText } from '../utils';
+import { getTaskCountText } from '../utils';
+import { useTasks } from '../hooks/useTasks';
 import { cn } from '@/utils/cn';
 import { ChevronUp, ChevronDown } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface TaskListProps {
     initialTasks: Task[];
     status?: EnumTaskStatus;
     initialSortField?: string;
     initialSortOrder?: SortFindManyTaskInput;
+    page: number;
+    pageSize: number;
+    totalTask: number;
 }
 
 export function TaskList({
     initialTasks,
     status,
     initialSortField = 'title',
-    initialSortOrder = SortFindManyTaskInput.IdDesc
+    initialSortOrder = SortFindManyTaskInput.IdDesc,
+    page,
+    pageSize,
+    totalTask
 }: TaskListProps) {
-    // Use the initial data from server-side rendering
-    const tasks = initialTasks;
-    const totalTasks = tasks.length;
+    const router = useRouter();
+    const { sortOrder, tasks, toggleSort, getSortButtonText } = useTasks({
+        initialTasks,
+        status,
+    });
+    const totalPages = Math.ceil(totalTask / pageSize);
+
+    const handleNext = () => {
+        if (page < totalPages) {
+            router.push(`?page=${page + 1}`);
+        }
+    };
+    const handlePrev = () => {
+        if (page > 1) {
+            router.push(`?page=${page - 1}`);
+        }
+    };
 
     if (tasks.length === 0) {
         return (
@@ -42,17 +64,48 @@ export function TaskList({
         <div>
             <div className={cn("flex justify-between items-center mb-6")}>
                 <h2 className={cn("text-lg font-semibold text-gray-900 dark:text-gray-100")}>
-                    {getTaskCountText(totalTasks)}
+                    {getTaskCountText(tasks.length)}
                 </h2>
-                <div className={cn("text-sm text-gray-600 dark:text-gray-300")}>
-                    Sorted by: {getSortButtonText(initialSortOrder)}
-                </div>
+                <button
+                    onClick={toggleSort}
+                    className={cn(
+                        "btn-outline text-sm flex items-center gap-2",
+                        "px-3 py-2 rounded-md border transition-colors",
+                        "hover:bg-gray-50 dark:hover:bg-gray-800",
+                        "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    )}
+                >
+                    {sortOrder === 'asc' ? (
+                        <ChevronUp className={cn("w-4 h-4")} />
+                    ) : (
+                        <ChevronDown className={cn("w-4 h-4")} />
+                    )}
+                    {getSortButtonText()}
+                </button>
             </div>
 
             <div className={cn("space-y-4")}>
                 {tasks.map((task) => (
                     <TaskCard key={task._id} task={task} />
                 ))}
+            </div>
+
+            <div className={cn('flex justify-between items-center mt-6')}>
+                <button
+                    onClick={handlePrev}
+                    disabled={page === 1}
+                    className={cn('btn-outline px-3 py-2 rounded-md border', 'disabled:opacity-50')}
+                >
+                    Previous
+                </button>
+                <span>Page {page} of {totalPages}</span>
+                <button
+                    onClick={handleNext}
+                    disabled={page === totalPages}
+                    className={cn('btn-outline px-3 py-2 rounded-md border', 'disabled:opacity-50')}
+                >
+                    Next
+                </button>
             </div>
         </div>
     );
