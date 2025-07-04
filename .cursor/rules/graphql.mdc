@@ -1,0 +1,134 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# GraphQL Rules
+
+## CRITICAL: Always Check Schema First
+1. **ALWAYS** check `@/.codegen/schema.ts` BEFORE writing any GraphQL code
+2. **NEVER** create custom types - use existing types from the schema
+3. **ALWAYS** import types from `@/.codegen/schema` instead of defining your own
+
+## Schema Understanding
+1. **MANDATORY**: Check `@/.codegen/schema.ts` to see available queries/mutations
+2. Only use operations that exist in the schema
+3. Look for existing types like:
+   - `QueryTaskListArgs` for query arguments
+   - `FilterFindManyTaskInput` for filtering
+   - `SortFindManyTaskInput` for sorting
+   - `Task` for task objects
+   - `EnumTaskStatus` for status enums
+
+## Type Usage Rules
+1. **NEVER** create custom interfaces for GraphQL operations
+2. **ALWAYS** use generated types from `@/.codegen/schema`
+3. **NEVER** use string literals for enums - use the generated enum values
+4. **ALWAYS** import the specific types you need
+
+### Common Types to Use:
+```typescript
+// ✅ CORRECT - Use these from schema
+import {
+  QueryTaskListArgs,
+  FilterFindManyTaskInput,
+  SortFindManyTaskInput,
+  Task,
+  EnumTaskStatus
+} from '@/.codegen/schema';
+
+// ❌ WRONG - Don't create custom types
+interface TaskListParams {
+  limit?: number;
+  skip?: number;
+  sort?: string;
+  filter?: any;
+}
+```
+
+## Operation Structure
+1. Server-Side Operations:
+   ```typescript
+   'use server';
+
+   import client from '@/utils/apolloClient';
+   import { gql } from '@apollo/client';
+   import { QueryTaskListArgs, Task } from '@/.codegen/schema';
+
+   export async function getTaskList(params: QueryTaskListArgs = {}) {
+       const { data } = await client.query({
+           query: gql`query TaskList {
+               // Query fields
+           }`,
+           fetchPolicy: 'no-cache',
+       });
+
+       return data as { taskList: Task[] };
+   }
+   ```
+
+2. Client-Side Operations:
+   ```typescript
+   import { gql } from '@apollo/client';
+   import { Task } from '@/.codegen/schema';
+
+   export const TASK_LIST_QUERY = gql`
+       query TaskList {
+           // Query fields
+       }
+   `;
+   ```
+
+## Operation Naming
+1. Queries:
+   - Use camelCase
+   - start with a verb: `get`, `fetch`, `list`
+   - Be specific: `getTaskList`
+
+2. Mutations:
+   - Use camelCase
+   - Start with a verb: `create`, `update`, `delete`
+   - Be specific: `createTask`, `updateTaskStatus`
+
+## Type Safety Checklist
+- [ ] Checked `@/.codegen/schema.ts` for existing types
+- [ ] Imported types from `@/.codegen/schema` instead of creating custom ones
+- [ ] Used proper enum values (e.g., `SortFindManyTaskInput.IdDesc`)
+- [ ] Used proper filter types (e.g., `FilterFindManyTaskInput`)
+- [ ] Used proper query argument types (e.g., `QueryTaskListArgs`)
+
+## Error Handling
+1. Server-Side:
+   ```typescript
+   try {
+       const { data } = await client.query({...});
+       return data;
+   } catch (error) {
+       console.error('Operation failed:', error);
+       throw error;
+   }
+   ```
+
+2. Client-Side:
+   ```typescript
+   const { data, error } = useQuery(operationName);
+   if (error) {
+       // Handle error
+   }
+   ```
+
+## Best Practices
+1. Use `fetchPolicy: 'no-cache'` for server-side operations
+2. Keep queries focused and specific
+3. Use fragments for shared fields
+4. Document complex operations with comments
+5. Handle loading and error states
+6. **ALWAYS** use generated types - never create custom ones
+7. **ALWAYS** check the schema first before writing any GraphQL code
+
+## Common Mistakes to Avoid
+- ❌ Creating custom interfaces for GraphQL operations
+- ❌ Using string literals instead of enum values
+- ❌ Not checking the schema before writing code
+- ❌ Importing types from wrong locations
+- ❌ Using `any` types instead of proper schema types

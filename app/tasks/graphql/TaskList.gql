@@ -1,0 +1,29 @@
+query TaskList($limit: Int, $skip: Int, $sort: SortFindManyTaskInput, $filter: FilterFindManyTaskInput) {
+    taskList(limit: $limit, skip: $skip, sort: $sort, filter: $filter) {
+      _id
+      title
+      description
+      createdAt
+      updatedAt
+      status
+      distance
+      duration {
+        unit
+        value
+      }
+      end_date
+      human_friendly_end_date
+      images
+      is_active
+      is_remote
+      is_suspended
+      latestOffers {
+        _id
+        offers {
+          value
+        }
+      }
+      number_of_likes
+      number_of_offers
+    }
+  }

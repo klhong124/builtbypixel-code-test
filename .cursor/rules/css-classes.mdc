@@ -1,0 +1,94 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# CSS Class Management Rules
+
+## Overview
+All `className` props must be wrapped with the `cn()` function imported from `@/utils/cn` to ensure proper class merging and conflict resolution.
+
+## Import Statement
+```typescript
+import { cn } from "@/utils/cn";
+```
+
+## Usage Rules
+
+### 1. All className props must use cn()
+```typescript
+✅ Good:
+<div className={cn("base-class", conditional && "conditional-class")}>
+<button className={cn("btn", "btn-primary", isActive && "active")}>
+<span className={cn("text-sm", "font-medium", variant === "bold" && "font-bold")}>
+
+❌ Avoid:
+<div className="base-class conditional-class">
+<button className={`btn btn-primary ${isActive ? 'active' : ''}`}>
+<span className="text-sm font-medium">
+```
+
+### 2. Conditional Classes
+Always use logical operators with cn() for conditional classes:
+```typescript
+✅ Good:
+className={cn(
+  "base-class",
+  isActive && "active",
+  isDisabled && "disabled",
+  variant === "primary" && "bg-blue-500"
+)}
+
+❌ Avoid:
+className={`base-class ${isActive ? 'active' : ''} ${isDisabled ? 'disabled' : ''}`}
+```
+
+### 3. Dynamic Classes
+For dynamic classes, use cn() with proper type safety:
+```typescript
+✅ Good:
+className={cn(
+  "button",
+  size === "small" && "text-sm",
+  size === "large" && "text-lg",
+  variant === "outline" && "border",
+  variant === "filled" && "bg-primary"
+)}
+
+❌ Avoid:
+className={`button ${size === "small" ? 'text-sm' : size === 'large' ? 'text-lg' : ''}`}
+```
+
+### 4. Component Props
+When accepting className as a prop, always merge with cn():
+```typescript
+✅ Good:
+interface ButtonProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+export function Button({ className, children }: ButtonProps) {
+  return (
+    <button className={cn("base-button-styles", className)}>
+      {children}
+    </button>
+  );
+}
+
+❌ Avoid:
+<button className={`base-button-styles ${className || ''}`}>
+```
+
+## Benefits
+- **Consistent merging**: Ensures proper class merging with Tailwind CSS
+- **Conflict resolution**: Prevents class conflicts and overrides
+- **Type safety**: Better TypeScript support
+- **Readability**: Cleaner, more maintainable code
+- **Performance**: Optimised class merging
+
+## Enforcement
+- All new components must follow this rule
+- Existing components should be refactored to use cn()
+- Code reviews should check for proper cn() usage
+- ESLint rules can be configured to enforce this pattern
