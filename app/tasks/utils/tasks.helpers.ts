@@ -56,20 +56,3 @@ export const STATUS_OPTIONS = [
   { value: EnumTaskStatus.OfferAccepted, label: 'Offer Accepted', path: '/tasks/offer_accepted' },
   { value: EnumTaskStatus.Completed, label: 'Completed', path: '/tasks/completed' },
 ] as const;
-
-// Page title helpers
-export function getPageTitle(status?: string): string {
-  if (!status) return 'Task Management';
-  return `${getStatusLabel(status)} Tasks`;
-}
-
-export function getLoadingText(status?: string): string {
-  if (!status) return 'Loading tasks...';
-  return `Loading ${getStatusLabel(status).toLowerCase()} tasks...`;
-}
-
-// Error message helpers
-export function getErrorMessage(status?: string): string {
-  if (!status) return 'Failed to load tasks. Please try again later.';
-  return `Failed to load tasks for status: ${getStatusLabel(status)}. Please try again later.`;
-}

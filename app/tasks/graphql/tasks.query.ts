@@ -18,7 +18,7 @@ export async function getTotalTask(params: QueryTaskListArgs = {}): Promise<{ da
     });
 
     return { data: result.data.taskList.length };
-  } catch (error) {
+  } catch {
     return { error: 'Failed to fetch tasks. Please try again later.' };
   }
 }
@@ -40,7 +40,7 @@ export async function getTaskList(params: QueryTaskListArgs = {}): Promise<{ dat
     });
 
     return { data: result.data.taskList as Task[] };
-  } catch (error) {
+  } catch {
     return { error: 'Failed to fetch tasks. Please try again later.' };
   }
 }

@@ -5,40 +5,9 @@ import { cn } from '@/utils/cn';
 import { useTheme } from 'next-themes';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
-import { useCallback, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Logo } from '@/components/logo';
 
 
-const Logo = () => {
-    const { theme } = useTheme();
-    const [isMounted, setIsMounted] = useState(false);
-    const router = useRouter();
-
-    // This is a hack to prevent the hydration error when the logo is not mounted with theme
-    const logoRef = useCallback((node: HTMLImageElement) => {
-        if (node) {
-            setIsMounted(true);
-        }
-    }, []);
-    return (
-        <div ref={logoRef} >
-            {isMounted && (
-                <Image
-                    onClick={() => router.push('/')}
-                    src="https://www.builtbypixel.com/images/logo-white.svg"
-                    alt="Built By Pixel"
-                    width={120}
-                    height={32}
-                    className={cn(
-                        "h-8 w-auto cursor-pointer",
-                        theme === 'light' ? 'invert' : ''
-                    )} />
-            )}
-        </div>
-
-    );
-}
 
 export function TasksHeader() {
     const { theme, setTheme } = useTheme();
@@ -54,7 +23,7 @@ export function TasksHeader() {
             transition={{ duration: 0.5 }}
             className={cn(
                 'sticky top-0 z-30 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60',
-                'px-6 py-4 flex items-center justify-between',
+                'px-0 md:px-6 py-4 flex items-center justify-between',
                 'max-w-7xl mx-auto'
             )}
         >

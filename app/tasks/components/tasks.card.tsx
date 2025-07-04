@@ -4,7 +4,6 @@ import { Task } from '@/.codegen/schema';
 import { getStatusLabel } from '@/app/tasks/utils/tasks.helpers';
 import { cn } from '@/utils/cn';
 import { Badge } from '@/components/ui/badge';
-import { motion } from 'motion/react';
 import { MapPin, Calendar, Heart, DollarSign, Wifi, AlertTriangle } from 'lucide-react';
 
 interface TaskCardProps {
@@ -46,11 +45,20 @@ export function TaskCard({ task }: TaskCardProps) {
     };
 
     return (
-        <motion.div
+        <div
             className={cn(
-                'card bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm',
-                'w-full p-4 mb-4'
+                'card bg-white dark:bg-stone-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm',
+                'w-full py-4 px-6 mb-4 cursor-pointer relative',
+                'transition-all duration-300 ease-in-out',
+                'hover:border-blue-300 dark:hover:border-blue-700',
+                'hover:shadow-md hover:shadow-blue-100 dark:hover:shadow-blue-900/20',
+                'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0',
+                'before:bg-blue-500 dark:before:bg-blue-700',
+                'before:transition-all before:duration-300 before:ease-in-out',
+                'overflow-hidden',
+                'hover:before:w-1'
             )}
+
         >
             {/* Header: Title & Status Badge */}
             <div className={cn('flex items-center justify-between gap-2 mb-1')}>
@@ -91,17 +99,12 @@ export function TaskCard({ task }: TaskCardProps) {
                 <p className={cn('text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-2')}>{task.description}</p>
             )}
 
-
-
-
-
-
             {/* Timestamps Footer */}
             {getLatestOffer() && (
                 <div className={cn('flex justify-end border-t border-gray-100 dark:border-gray-800 pt-2 mt-2')}>
                     <span className='text-sm font-medium text-green-600 dark:text-green-400'>£{getLatestOffer()}</span>
                 </div>
             )}
-        </motion.div>
+        </div>
     );
 }

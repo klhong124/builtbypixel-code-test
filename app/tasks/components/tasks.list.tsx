@@ -7,6 +7,7 @@ import { cn } from '@/utils/cn';
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { PAGE_SIZE } from '@tasks/utils';
+import { motion } from 'motion/react';
 import {
     Pagination,
     PaginationContent,
@@ -53,7 +54,12 @@ export function TaskList({
 
     if (tasks.length === 0) {
         return (
-            <div className={cn("bg-blue-50 border border-blue-200 rounded-lg p-4 dark:bg-blue-900/20 dark:border-blue-800")}>
+            <motion.div
+                className={cn("bg-blue-50 border border-blue-200 rounded-lg p-4 dark:bg-blue-900/20 dark:border-blue-800")}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+            >
                 <div className={cn("flex items-center")}>
                     <svg className={cn("w-5 h-5 text-blue-500 mr-2")} fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -62,15 +68,31 @@ export function TaskList({
                         No tasks found for status: {status || 'all'}
                     </p>
                 </div>
-            </div>
+            </motion.div>
         );
     }
 
     return (
-        <div>
-            <h1 className={cn("text-2xl font-bold mb-4")}>Task List</h1>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+        >
+            <motion.h1
+                className={cn("text-2xl font-bold mb-4")}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+            >
+                Task List
+            </motion.h1>
             {/* Simplified Page Control */}
-            <div className="flex items-center justify-between mb-4">
+            <motion.div
+                className="flex items-center justify-between mb-4"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+            >
                 <div className="flex items-center gap-2">
                     <Button
                         variant="outline"
@@ -110,51 +132,72 @@ export function TaskList({
                     )}
                     {getSortButtonText()}
                 </button>
-            </div>
+            </motion.div>
 
-            <div className={cn("space-y-4")}>
-                {tasks.map((task) => (
-                    <TaskCard key={task._id} task={task} />
+            <motion.div
+                className={cn("space-y-4")}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+            >
+                {tasks.map((task, index) => (
+                    <motion.div
+                        key={task._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                            duration: 0.4,
+                            delay: 0.4 + (index * 0.03)
+                        }}
+                    >
+                        <TaskCard task={task} />
+                    </motion.div>
                 ))}
-            </div>
+            </motion.div>
 
             {/* Pagination */}
-            <Pagination className="my-8">
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            onClick={() => handlePageChange(page - 1)}
-                            aria-disabled={page === 1}
-                            tabIndex={page === 1 ? -1 : 0}
-                        />
-                    </PaginationItem>
-                    {getPages().map((p, idx) =>
-                        typeof p === 'number' ? (
-                            <PaginationItem key={p}>
-                                <PaginationLink
-                                    isActive={p === page}
-                                    onClick={() => handlePageChange(p)}
-                                    aria-current={p === page ? 'page' : undefined}
-                                    tabIndex={p === page ? -1 : 0}
-                                >
-                                    {p}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ) : (
-                            <PaginationItem key={`ellipsis-${idx}`}>
-                                <PaginationEllipsis />
-                            </PaginationItem>
-                        )
-                    )}
-                    <PaginationItem>
-                        <PaginationNext
-                            onClick={() => handlePageChange(page + 1)}
-                            aria-disabled={page === totalPages}
-                            tabIndex={page === totalPages ? -1 : 0}
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
-        </div>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.6 }}
+            >
+                <Pagination className="my-8">
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                onClick={() => handlePageChange(page - 1)}
+                                aria-disabled={page === 1}
+                                tabIndex={page === 1 ? -1 : 0}
+                            />
+                        </PaginationItem>
+                        {getPages().map((p, idx) =>
+                            typeof p === 'number' ? (
+                                <PaginationItem key={p}>
+                                    <PaginationLink
+                                        isActive={p === page}
+                                        onClick={() => handlePageChange(p)}
+                                        aria-current={p === page ? 'page' : undefined}
+                                        tabIndex={p === page ? -1 : 0}
+                                    >
+                                        {p}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ) : (
+                                <PaginationItem key={`ellipsis-${idx}`}>
+                                    <PaginationEllipsis />
+                                </PaginationItem>
+                            )
+                        )}
+                        <PaginationItem>
+                            <PaginationNext
+                                onClick={() => handlePageChange(page + 1)}
+                                aria-disabled={page === totalPages}
+                                tabIndex={page === totalPages ? -1 : 0}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            </motion.div>
+        </motion.div>
     );
 }
