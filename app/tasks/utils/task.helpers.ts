@@ -1,7 +1,9 @@
-import { EnumTaskStatus, Task } from '@/.codegen/schema';
+import { EnumTaskStatus, Task, SortFindManyTaskInput } from '@/.codegen/schema';
 
 export type SortOrder = 'asc' | 'desc';
 
+// Note: This function is kept for potential client-side sorting if needed
+// but server-side sorting is now preferred
 export function sortTasksByName(tasks: Task[], order: SortOrder = 'asc'): Task[] {
   return [...tasks].sort((a, b) => {
     const comparison = a.title.localeCompare(b.title);
@@ -103,10 +105,12 @@ export function getTaskCountText(count: number): string {
 }
 
 // Sort order helpers
-export function getSortButtonText(order: SortOrder): string {
-  return `Sort by Title (${order === 'asc' ? 'A-Z' : 'Z-A'})`;
+export function getSortButtonText(order: SortFindManyTaskInput): string {
+  return `Sort by ID (${order === SortFindManyTaskInput.IdAsc ? 'A-Z' : 'Z-A'})`;
 }
 
-export function toggleSortOrder(currentOrder: SortOrder): SortOrder {
-  return currentOrder === 'asc' ? 'desc' : 'asc';
+export function toggleSortOrder(currentOrder: SortFindManyTaskInput): SortFindManyTaskInput {
+  return currentOrder === SortFindManyTaskInput.IdAsc
+    ? SortFindManyTaskInput.IdDesc
+    : SortFindManyTaskInput.IdAsc;
 }

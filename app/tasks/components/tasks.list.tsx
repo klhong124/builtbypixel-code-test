@@ -1,32 +1,27 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Task } from '@/.codegen/schema';
+import { Task, EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
 import { TaskCard } from './tasks.card';
-import {
-    sortTasksByName,
-    SortOrder,
-    getTaskCountText,
-    getSortButtonText,
-    toggleSortOrder
-} from '../utils';
+import { getTaskCountText, getSortButtonText } from '../utils';
 import { cn } from '@/utils/cn';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 
 interface TaskListProps {
-    tasks: Task[];
-    status?: string;
+    initialTasks: Task[];
+    status?: EnumTaskStatus;
+    initialSortField?: string;
+    initialSortOrder?: SortFindManyTaskInput;
 }
 
-export function TaskList({ tasks, status }: TaskListProps) {
-    const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
-
-    const sortedTasks = useMemo(() => {
-        return sortTasksByName(tasks, sortOrder);
-    }, [tasks, sortOrder]);
-
-    const handleSort = () => {
-        setSortOrder(prev => toggleSortOrder(prev));
-    };
+export function TaskList({
+    initialTasks,
+    status,
+    initialSortField = 'title',
+    initialSortOrder = SortFindManyTaskInput.IdDesc
+}: TaskListProps) {
+    // Use the initial data from server-side rendering
+    const tasks = initialTasks;
+    const totalTasks = tasks.length;
 
     if (tasks.length === 0) {
         return (
@@ -47,27 +42,15 @@ export function TaskList({ tasks, status }: TaskListProps) {
         <div>
             <div className={cn("flex justify-between items-center mb-6")}>
                 <h2 className={cn("text-lg font-semibold text-gray-900 dark:text-gray-100")}>
-                    {getTaskCountText(tasks.length)}
+                    {getTaskCountText(totalTasks)}
                 </h2>
-                <button
-                    onClick={handleSort}
-                    className={cn("btn-outline text-sm flex items-center gap-2")}
-                >
-                    {sortOrder === 'asc' ? (
-                        <svg className={cn("w-4 h-4")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                        </svg>
-                    ) : (
-                        <svg className={cn("w-4 h-4")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                    )}
-                    {getSortButtonText(sortOrder)}
-                </button>
+                <div className={cn("text-sm text-gray-600 dark:text-gray-300")}>
+                    Sorted by: {getSortButtonText(initialSortOrder)}
+                </div>
             </div>
 
             <div className={cn("space-y-4")}>
-                {sortedTasks.map((task) => (
+                {tasks.map((task) => (
                     <TaskCard key={task._id} task={task} />
                 ))}
             </div>

@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { STATUS_OPTIONS } from '../utils';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/utils/cn';
@@ -29,5 +28,4 @@ export function TaskFilter() {
             </div>
         </div>
     );
-
 }

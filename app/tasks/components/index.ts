@@ -1,3 +1,4 @@
-export { TaskCard } from './tasks.card';
 export { TaskList } from './tasks.list';
 export { TaskFilter } from './tasks.filter';
+export { TaskCard } from './tasks.card';
+export { TasksPageContent, TasksContent } from './tasks.page-content';
