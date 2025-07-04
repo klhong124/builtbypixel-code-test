@@ -59,9 +59,12 @@ export function TaskList({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
+                role="status"
+                aria-live="polite"
+                aria-label={`No tasks found for status: ${status || 'all'}`}
             >
                 <div className={cn("flex items-center")}>
-                    <svg className={cn("w-5 h-5 text-blue-500 mr-2")} fill="currentColor" viewBox="0 0 20 20">
+                    <svg className={cn("w-5 h-5 text-blue-500 mr-2")} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                     <p className={cn("text-blue-800 dark:text-blue-200")}>
@@ -77,6 +80,8 @@ export function TaskList({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
+            role="main"
+            aria-label="Task list section"
         >
             <motion.h1
                 className={cn("text-2xl font-bold mb-4")}
@@ -92,18 +97,21 @@ export function TaskList({
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
+                role="navigation"
+                aria-label="Task list navigation"
             >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2" role="group" aria-label="Page navigation">
                     <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handlePageChange(page - 1)}
                         disabled={page === 1}
-                        aria-label="Previous page"
+                        aria-label="Go to previous page"
+                        aria-disabled={page === 1}
                     >
-                        <ChevronLeft className="w-4 h-4" />
+                        <ChevronLeft className="w-4 h-4" aria-hidden="true" />
                     </Button>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                    <span className="text-sm text-gray-500 dark:text-gray-400" aria-label={`Page ${page} of ${totalPages}`}>
                         Page {page} of {totalPages}
                     </span>
                     <Button
@@ -111,9 +119,10 @@ export function TaskList({
                         size="sm"
                         onClick={() => handlePageChange(page + 1)}
                         disabled={page === totalPages}
-                        aria-label="Next page"
+                        aria-label="Go to next page"
+                        aria-disabled={page === totalPages}
                     >
-                        <ChevronRight className="w-4 h-4" />
+                        <ChevronRight className="w-4 h-4" aria-hidden="true" />
                     </Button>
                 </div>
                 <button
@@ -124,11 +133,13 @@ export function TaskList({
                         "hover:bg-gray-50 dark:hover:bg-gray-800",
                         "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     )}
+                    aria-label={`Sort tasks ${sortOrder === 'a-z' ? 'descending' : 'ascending'}. Current sort: ${getSortButtonText()}`}
+                    aria-pressed={sortOrder === 'a-z'}
                 >
                     {sortOrder === 'a-z' ? (
-                        <ChevronUp className={cn("w-4 h-4")} />
+                        <ChevronUp className={cn("w-4 h-4")} aria-hidden="true" />
                     ) : (
-                        <ChevronDown className={cn("w-4 h-4")} />
+                        <ChevronDown className={cn("w-4 h-4")} aria-hidden="true" />
                     )}
                     {getSortButtonText()}
                 </button>
@@ -139,6 +150,8 @@ export function TaskList({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.3 }}
+                role="list"
+                aria-label={`Task list with ${tasks.length} tasks`}
             >
                 {tasks.map((task, index) => (
                     <motion.div
@@ -149,6 +162,7 @@ export function TaskList({
                             duration: 0.4,
                             delay: 0.4 + (index * 0.03)
                         }}
+                        role="listitem"
                     >
                         <TaskCard task={task} />
                     </motion.div>
@@ -160,6 +174,8 @@ export function TaskList({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.6 }}
+                role="navigation"
+                aria-label="Pagination navigation"
             >
                 <Pagination className="my-8">
                     <PaginationContent>
@@ -168,6 +184,7 @@ export function TaskList({
                                 onClick={() => handlePageChange(page - 1)}
                                 aria-disabled={page === 1}
                                 tabIndex={page === 1 ? -1 : 0}
+                                aria-label="Go to previous page"
                             />
                         </PaginationItem>
                         {getPages().map((p, idx) =>
@@ -178,13 +195,14 @@ export function TaskList({
                                         onClick={() => handlePageChange(p)}
                                         aria-current={p === page ? 'page' : undefined}
                                         tabIndex={p === page ? -1 : 0}
+                                        aria-label={`Go to page ${p}${p === page ? ' (current page)' : ''}`}
                                     >
                                         {p}
                                     </PaginationLink>
                                 </PaginationItem>
                             ) : (
                                 <PaginationItem key={`ellipsis-${idx}`}>
-                                    <PaginationEllipsis />
+                                    <PaginationEllipsis aria-label="More pages available" />
                                 </PaginationItem>
                             )
                         )}
@@ -193,6 +211,7 @@ export function TaskList({
                                 onClick={() => handlePageChange(page + 1)}
                                 aria-disabled={page === totalPages}
                                 tabIndex={page === totalPages ? -1 : 0}
+                                aria-label="Go to next page"
                             />
                         </PaginationItem>
                     </PaginationContent>

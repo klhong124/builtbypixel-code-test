@@ -45,7 +45,7 @@ export function TaskCard({ task }: TaskCardProps) {
     };
 
     return (
-        <div
+        <article
             className={cn(
                 'card bg-white dark:bg-stone-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm',
                 'w-full py-4 px-6 mb-4 cursor-pointer relative',
@@ -58,53 +58,104 @@ export function TaskCard({ task }: TaskCardProps) {
                 'overflow-hidden',
                 'hover:before:w-1'
             )}
-
+            aria-labelledby={`task-title-${task._id}`}
+            aria-describedby={`task-description-${task._id}`}
+            role="article"
+            tabIndex={0}
         >
             {/* Header: Title & Status Badge */}
             <div className={cn('flex items-center justify-between gap-2 mb-1')}>
-                <h3 className={cn('font-semibold text-gray-900 dark:text-gray-100 text-base line-clamp-2 min-w-0')}>{task.title}</h3>
+                <h3
+                    id={`task-title-${task._id}`}
+                    className={cn('font-semibold text-gray-900 dark:text-gray-100 text-base line-clamp-2 min-w-0')}
+                >
+                    {task.title}
+                </h3>
 
                 {/* Status Badges */}
-                <div className={cn('flex items-center gap-2 ml-auto')}>
+                <div className={cn('flex items-center gap-2 ml-auto')} role="group" aria-label="Task status indicators">
                     {task.is_suspended && (
-                        <span className='flex items-center gap-1 text-orange-600 dark:text-orange-400 text-xs'><AlertTriangle className='w-3 h-3' />Suspended</span>
+                        <span
+                            className='flex items-center gap-1 text-orange-600 dark:text-orange-400 text-xs'
+                            aria-label="Task is suspended"
+                        >
+                            <AlertTriangle className='w-3 h-3' aria-hidden="true" />
+                            Suspended
+                        </span>
                     )}
                     {!task.is_active && (
-                        <span className='flex items-center gap-1 text-red-600 dark:text-red-400 text-xs'><AlertTriangle className='w-3 h-3' />Inactive</span>
+                        <span
+                            className='flex items-center gap-1 text-red-600 dark:text-red-400 text-xs'
+                            aria-label="Task is inactive"
+                        >
+                            <AlertTriangle className='w-3 h-3' aria-hidden="true" />
+                            Inactive
+                        </span>
                     )}
                 </div>
 
                 <Badge
                     variant={getBadgeVariant(task.status ?? undefined)}
                     className={cn(getBadgeStyle(task.status ?? undefined), 'ml-2 px-2 py-0.5 text-xs')}
+                    aria-label={`Task status: ${getStatusLabel(task.status)}`}
                 >
                     {getStatusLabel(task.status)}
                 </Badge>
             </div>
 
             {/* Stats Row */}
-            <div className={cn('flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 my-2')}>
+            <div className={cn('flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 my-2')} role="group" aria-label="Task statistics">
                 <div className='flex items-center gap-3'>
-                    <span className='flex items-center gap-1'><Heart className='w-3 h-3' />{task.number_of_likes ?? 0}</span>
-                    <span className='flex items-center gap-1'><DollarSign className='w-3 h-3' />{task.number_of_offers ?? 0} offers</span>
-                    {task.distance && <span className='flex items-center gap-1'><MapPin className='w-3 h-3' />{task.distance}km</span>}
-                    {task.human_friendly_end_date && <span className='flex items-center gap-1'><Calendar className='w-3 h-3' />{task.human_friendly_end_date}</span>}
-                    {task.is_remote && <span className='flex items-center gap-1'><Wifi className='w-3 h-3' />{task.is_remote ? 'Remote' : 'Onsite'}</span>}
+                    <span className='flex items-center gap-1' aria-label={`${task.number_of_likes ?? 0} likes`}>
+                        <Heart className='w-3 h-3' aria-hidden="true" />
+                        {task.number_of_likes ?? 0}
+                    </span>
+                    <span className='flex items-center gap-1' aria-label={`${task.number_of_offers ?? 0} offers received`}>
+                        <DollarSign className='w-3 h-3' aria-hidden="true" />
+                        {task.number_of_offers ?? 0} offers
+                    </span>
+                    {task.distance && (
+                        <span className='flex items-center gap-1' aria-label={`Distance: ${task.distance} kilometers`}>
+                            <MapPin className='w-3 h-3' aria-hidden="true" />
+                            {task.distance}km
+                        </span>
+                    )}
+                    {task.human_friendly_end_date && (
+                        <span className='flex items-center gap-1' aria-label={`End date: ${task.human_friendly_end_date}`}>
+                            <Calendar className='w-3 h-3' aria-hidden="true" />
+                            {task.human_friendly_end_date}
+                        </span>
+                    )}
+                    {task.is_remote && (
+                        <span className='flex items-center gap-1' aria-label={`Work type: ${task.is_remote ? 'Remote' : 'Onsite'}`}>
+                            <Wifi className='w-3 h-3' aria-hidden="true" />
+                            {task.is_remote ? 'Remote' : 'Onsite'}
+                        </span>
+                    )}
                 </div>
             </div>
 
-
             {/* Description */}
             {task.description && (
-                <p className={cn('text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-2')}>{task.description}</p>
+                <p
+                    id={`task-description-${task._id}`}
+                    className={cn('text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-2')}
+                >
+                    {task.description}
+                </p>
             )}
 
             {/* Timestamps Footer */}
             {getLatestOffer() && (
                 <div className={cn('flex justify-end border-t border-gray-100 dark:border-gray-800 pt-2 mt-2')}>
-                    <span className='text-sm font-medium text-green-600 dark:text-green-400'>£{getLatestOffer()}</span>
+                    <span
+                        className='text-sm font-medium text-green-600 dark:text-green-400'
+                        aria-label={`Latest offer: £${getLatestOffer()}`}
+                    >
+                        £{getLatestOffer()}
+                    </span>
                 </div>
             )}
-        </div>
+        </article>
     );
 }

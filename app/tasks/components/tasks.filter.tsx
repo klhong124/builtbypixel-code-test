@@ -11,11 +11,11 @@ export function TaskFilter() {
     const pathname = usePathname();
 
     return (
-        <div className={cn("mb-6")}>
-            <p className={cn("text-sm font-medium mb-3 text-gray-600 dark:text-gray-300")}>
+        <nav className={cn("mb-6")} role="navigation" aria-label="Task status filter">
+            <h2 className={cn("text-sm font-medium mb-3 text-gray-600 dark:text-gray-300")}>
                 Filter by Status:
-            </p>
-            <div className={cn("flex flex-col gap-2")}>
+            </h2>
+            <div className={cn("flex flex-col gap-2")} role="group" aria-label="Status filter options">
                 {STATUS_OPTIONS.map((option, index) => (
                     <motion.div key={option.value}
                         initial={{ opacity: 0, y: 10 }}
@@ -25,6 +25,9 @@ export function TaskFilter() {
                         <Button
                             asChild
                             variant={pathname === option.path ? "default" : "link"}
+                            aria-label={`Filter tasks by ${option.label.toLowerCase()} status`}
+                            aria-current={pathname === option.path ? 'page' : undefined}
+                            aria-pressed={pathname === option.path}
                         >
                             <Link href={option.path}>
                                 {option.label}
@@ -33,6 +36,6 @@ export function TaskFilter() {
                     </motion.div>
                 ))}
             </div>
-        </div>
+        </nav>
     );
 }

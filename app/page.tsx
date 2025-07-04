@@ -25,21 +25,24 @@ export default function Home() {
         {/* Header Section */}
         <div className="bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950 px-8 py-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-blue-900 dark:text-blue-200 tracking-tight mb-1">Pixel Code Test Submission</h1>
+            <div className="flex items-center mb-4">
+              <h1 className="text-2xl md:text-3xl font-bold text-blue-900 dark:text-blue-200 tracking-tight mb-1">Pixel Code Test Submission</h1>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                aria-label="Toggle dark mode"
+                className={cn('ml-auto p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors')}
+              >
+                {theme === 'dark' ? <Moon /> : <Sun />}
+              </Button>
+            </div>
             <span className="inline-block bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs font-semibold px-3 py-1 rounded-full mb-2">Frontend Test</span>
             <p className="text-gray-700 dark:text-gray-300 text-sm max-w-xl">
               Welcome! This is my submission for the Built by Pixel code test. Below you&apos;ll find a detailed breakdown of what I&apos;ve implemented in this repository, as well as instructions for exploring the app.
             </p>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            aria-label="Toggle dark mode"
-            className={cn('ml-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors')}
-          >
-            {theme === 'dark' ? <Moon /> : <Sun />}
-          </Button>
+
         </div>
 
         {/* Steps/Features Section */}
