@@ -9,8 +9,14 @@ interface TaskErrorProps {
 
 export function TaskError({ message, className }: TaskErrorProps) {
     return (
-        <Alert variant="destructive" className={cn('my-8', className)}>
-            <AlertTriangle className="h-5 w-5 text-red-600" />
+        <Alert
+            variant="destructive"
+            className={cn('my-8', className)}
+            role="alert"
+            aria-live="assertive"
+            aria-label="Error occurred while loading tasks"
+        >
+            <AlertTriangle className="h-5 w-5 text-red-600" aria-hidden="true" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{message}</AlertDescription>
         </Alert>
