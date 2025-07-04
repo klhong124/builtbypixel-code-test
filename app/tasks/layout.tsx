@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getPageTitle, getLoadingText } from './utils';
+import { getLoadingText } from './utils';
 import { cn } from '@/utils/cn';
 import { TaskFilter } from './components/tasks.filter';
 import { EnumTaskStatus } from '@/.codegen/schema';
@@ -10,7 +10,7 @@ export default async function TasksLayout({ params, children }: { params: Promis
     const { status } = await params;
 
     return (
-        <div className={cn("min-h-screen bg-background flex flex-col")}> {/* Full height, dark background */}
+        <div className={cn("min-h-screen bg-background flex flex-col px-2 md:px-0")}> {/* Full height, dark background */}
             {/* Header */}
             <TasksHeader/>
 

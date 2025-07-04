@@ -5,6 +5,7 @@ import { cn } from '@/utils/cn';
 import { useTheme } from 'next-themes';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 export function TasksHeader() {
     const { theme, setTheme } = useTheme();
@@ -26,7 +27,17 @@ export function TasksHeader() {
         >
 
             <h1 className={cn('text-2xl md:text-3xl font-bold text-foreground tracking-tight')}>
-                Built By Pixel
+                <Image
+                    src="https://www.builtbypixel.com/images/logo-white.svg"
+                    alt="Built By Pixel"
+                    width={120}
+                    height={32}
+                    className={cn(
+                        "h-8 w-auto",
+                        theme === 'light' ? 'invert' : ''
+                    )}
+                    priority
+                />
             </h1>
             <Button
                 variant="ghost"

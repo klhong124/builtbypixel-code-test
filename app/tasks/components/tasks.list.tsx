@@ -1,6 +1,6 @@
 'use client';
 
-import { Task, EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
+import { Task, EnumTaskStatus } from '@/.codegen/schema';
 import { TaskCard } from '@tasks/components/tasks.card';
 import { useTasks } from '@tasks/hooks/useTasks';
 import { cn } from '@/utils/cn';
@@ -68,7 +68,7 @@ export function TaskList({
 
     return (
         <div>
-            <h1>Task List</h1>
+            <h1 className={cn("text-2xl font-bold mb-4")}>Task List</h1>
             {/* Simplified Page Control */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">

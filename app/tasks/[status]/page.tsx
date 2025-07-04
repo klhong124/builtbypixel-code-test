@@ -1,17 +1,10 @@
 import { redirect } from 'next/navigation';
-import { getTaskList, getTotalTask } from '../graphql/tasks.query';
-import { TaskList } from '../components';
+import { getTaskList, getTotalTask } from '@tasks/graphql/tasks.query';
+import { TaskList } from '@tasks/components';
 import { EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
-import { normalizeStatus } from '../utils';
+import { normalizeStatus } from '@tasks/utils';
 
-interface StatusPageProps {
-    params: Promise<{
-        status: string;
-    }>;
-    searchParams: { [key: string]: string | string[] | undefined };
-}
-
-export default async function StatusPage({ params, searchParams }: StatusPageProps) {
+export default async function StatusPage({ params, searchParams }: { params: Promise<{ status: string }>, searchParams: Promise<{ page: string }> }) {
     const [
         { status: statusParam },
         { page: pageParam }
