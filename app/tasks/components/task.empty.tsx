@@ -30,36 +30,6 @@ export function TaskEmpty({ status, className, showSuggestions = true }: TaskEmp
                     : 'No tasks are currently available.'
                 }
             </AlertDescription>
-
-            {showSuggestions && (
-                <div className="mt-4 space-y-2">
-                    <p className="text-sm text-blue-600 dark:text-blue-300">
-                        Try these suggestions:
-                    </p>
-                    <ul className="text-sm text-blue-600 dark:text-blue-300 space-y-1 ml-4">
-                        <li className="flex items-center gap-2">
-                            <Search className="w-3 h-3" aria-hidden="true" />
-                            Check other status filters
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <Filter className="w-3 h-3" aria-hidden="true" />
-                            Clear any active filters
-                        </li>
-                    </ul>
-                    <div className="mt-3 flex gap-2">
-                        <Button asChild variant="outline" size="sm">
-                            <Link href="/tasks" aria-label="View all tasks">
-                                View All Tasks
-                            </Link>
-                        </Button>
-                        <Button asChild variant="outline" size="sm">
-                            <Link href="/tasks/new" aria-label="View new tasks">
-                                View New Tasks
-                            </Link>
-                        </Button>
-                    </div>
-                </div>
-            )}
         </Alert>
     );
 }

@@ -50,7 +50,7 @@ export default function Home() {
               <span className="font-semibold text-blue-700 dark:text-blue-300">Sorting, Filtering & UX</span>
             </div>
             <ul className="list-disc pl-5 text-sm text-gray-700 dark:text-stone-300 space-y-1">
-              <li>Client-side sorting (A–Z / Z–A) with instant feedback</li>
+              <li>Interactive client-side sorting (A–Z / Z–A) with visual indicators</li>
               <li>Status filter navigation with animated transitions</li>
               <li>Clear empty state and loading indicators</li>
               <li>Accessible, responsive design for all devices</li>
