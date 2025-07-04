@@ -1,16 +1,13 @@
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Info, Search, Filter } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { cn } from '@/utils/cn';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 
 interface TaskEmptyProps {
     status?: string;
     className?: string;
-    showSuggestions?: boolean;
 }
 
-export function TaskEmpty({ status, className, showSuggestions = true }: TaskEmptyProps) {
+export function TaskEmpty({ status, className }: TaskEmptyProps) {
     const statusText = status ? status.toLowerCase() : 'all';
 
     return (
