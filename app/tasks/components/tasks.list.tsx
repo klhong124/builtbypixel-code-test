@@ -4,9 +4,19 @@ import { Task, EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
 import { TaskCard } from '@tasks/components/tasks.card';
 import { useTasks } from '@tasks/hooks/useTasks';
 import { cn } from '@/utils/cn';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { PAGE_SIZE } from '@tasks/utils';
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationPrevious,
+    PaginationNext,
+    PaginationEllipsis,
+} from '@/components/ui/pagination';
+import { Button } from '@/components/ui/button';
 
 interface TaskListProps {
     initialTasks: Task[];
@@ -27,15 +37,18 @@ export function TaskList({
     });
     const totalPages = Math.ceil(totalTask / PAGE_SIZE);
 
-    const handleNext = () => {
-        if (page < totalPages) {
-            router.push(`?page=${page + 1}`);
+    const handlePageChange = (newPage: number) => {
+        if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
+            router.push(`?page=${newPage}`);
         }
     };
-    const handlePrev = () => {
-        if (page > 1) {
-            router.push(`?page=${page - 1}`);
-        }
+
+    // Generate page numbers (with ellipsis if needed)
+    const getPages = () => {
+        if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1);
+        if (page <= 3) return [1, 2, 3, 4, '...', totalPages];
+        if (page >= totalPages - 2) return [1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+        return [1, '...', page - 1, page, page + 1, '...', totalPages];
     };
 
     if (tasks.length === 0) {
@@ -55,10 +68,32 @@ export function TaskList({
 
     return (
         <div>
-            <div className={cn("flex justify-between items-center mb-6")}>
-                <h2 className={cn("text-lg font-semibold text-gray-900 dark:text-gray-100")}>
-                    <span>Page {page} of {totalPages}</span>
-                </h2>
+            <h1>Task List</h1>
+            {/* Simplified Page Control */}
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(page - 1)}
+                        disabled={page === 1}
+                        aria-label="Previous page"
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                    </Button>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                        Page {page} of {totalPages}
+                    </span>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(page + 1)}
+                        disabled={page === totalPages}
+                        aria-label="Next page"
+                    >
+                        <ChevronRight className="w-4 h-4" />
+                    </Button>
+                </div>
                 <button
                     onClick={toggleSort}
                     className={cn(
@@ -83,23 +118,43 @@ export function TaskList({
                 ))}
             </div>
 
-            <div className={cn('flex justify-between items-center mt-6')}>
-                <button
-                    onClick={handlePrev}
-                    disabled={page === 1}
-                    className={cn('btn-outline px-3 py-2 rounded-md border', 'disabled:opacity-50')}
-                >
-                    Previous
-                </button>
-                <span>Page {page} of {totalPages}</span>
-                <button
-                    onClick={handleNext}
-                    disabled={page === totalPages}
-                    className={cn('btn-outline px-3 py-2 rounded-md border', 'disabled:opacity-50')}
-                >
-                    Next
-                </button>
-            </div>
+            {/* Pagination */}
+            <Pagination className="my-8">
+                <PaginationContent>
+                    <PaginationItem>
+                        <PaginationPrevious
+                            onClick={() => handlePageChange(page - 1)}
+                            aria-disabled={page === 1}
+                            tabIndex={page === 1 ? -1 : 0}
+                        />
+                    </PaginationItem>
+                    {getPages().map((p, idx) =>
+                        typeof p === 'number' ? (
+                            <PaginationItem key={p}>
+                                <PaginationLink
+                                    isActive={p === page}
+                                    onClick={() => handlePageChange(p)}
+                                    aria-current={p === page ? 'page' : undefined}
+                                    tabIndex={p === page ? -1 : 0}
+                                >
+                                    {p}
+                                </PaginationLink>
+                            </PaginationItem>
+                        ) : (
+                            <PaginationItem key={`ellipsis-${idx}`}>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+                        )
+                    )}
+                    <PaginationItem>
+                        <PaginationNext
+                            onClick={() => handlePageChange(page + 1)}
+                            aria-disabled={page === totalPages}
+                            tabIndex={page === totalPages ? -1 : 0}
+                        />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
         </div>
     );
 }
