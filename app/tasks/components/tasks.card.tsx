@@ -2,6 +2,7 @@
 
 import { Task } from '@/.codegen/schema';
 import { formatDate, getStatusColor, getStatusLabel } from '../utils';
+import { cn } from '@/utils/cn';
 
 interface TaskCardProps {
     task: Task;
@@ -22,24 +23,24 @@ export function TaskCard({ task }: TaskCardProps) {
     };
 
     return (
-        <div className="card p-4 hover:-translate-y-1 transition-all duration-300">
-            <div className="space-y-3">
-                <div className="flex justify-between items-start">
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 line-clamp-2 flex-1 mr-4">
+        <div className={cn("card p-4 hover:-translate-y-1 transition-all duration-300")}>
+            <div className={cn("space-y-3")}>
+                <div className={cn("flex justify-between items-start")}>
+                    <h3 className={cn("font-semibold text-gray-900 dark:text-gray-100 line-clamp-2 flex-1 mr-4")}>
                         {task.title}
                     </h3>
-                    <span className={`${getBadgeClass(task.status ?? undefined)} flex-shrink-0`}>
+                    <span className={cn(getBadgeClass(task.status ?? undefined), "flex-shrink-0")}>
                         {getStatusLabel(task.status ?? undefined) ?? 'Unknown'}
                     </span>
                 </div>
 
                 {task.description && (
-                    <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+                    <p className={cn("text-sm text-gray-600 dark:text-gray-300 line-clamp-3")}>
                         {task.description}
                     </p>
                 )}
 
-                <div className="flex gap-4 text-xs text-gray-500 dark:text-gray-400">
+                <div className={cn("flex gap-4 text-xs text-gray-500 dark:text-gray-400")}>
                     <span>Created: {formatDate(task.createdAt)}</span>
                     <span>Updated: {formatDate(task.updatedAt)}</span>
                 </div>
