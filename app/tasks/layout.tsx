@@ -10,7 +10,9 @@ export default async function TasksLayout({ children }: { children: React.ReactN
     return (
         <div className={cn("min-h-screen bg-background flex flex-col px-2 md:px-0")}> {/* Full height, dark background */}
             {/* Header */}
-            <TasksHeader />
+            <TasksHeader>
+                <TaskFilter />
+            </TasksHeader>
 
             <div className={cn("flex-1 flex flex-row w-full max-w-7xl mx-auto gap-6 pt-6")}> {/* Main content area */}
                 {/* Sidebar (Filter) */}
