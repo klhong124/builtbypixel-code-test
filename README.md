@@ -1,3 +1,5 @@
+[![wakatime](https://wakatime.com/badge/user/e5861fa7-60ad-4e2e-8d44-eefbc5ee063e/project/284018c5-b3ab-4511-99a3-eff420cfb859.svg)](https://wakatime.com/badge/user/e5861fa7-60ad-4e2e-8d44-eefbc5ee063e/project/284018c5-b3ab-4511-99a3-eff420cfb859)
+
 # Task Management Application
 
 A modern, responsive task management application built with Next.js 15, featuring real-time updates, advanced filtering, and a beautiful user interface with smooth animations.
