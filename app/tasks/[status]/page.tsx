@@ -3,7 +3,6 @@ import { getTaskList, getTotalTask } from '../graphql/tasks.query';
 import { TaskList } from '../components';
 import { EnumTaskStatus, SortFindManyTaskInput } from '@/.codegen/schema';
 import { normalizeStatus } from '../utils';
-import { PAGE_SIZE } from '@tasks/utils';
 
 interface StatusPageProps {
     params: Promise<{
@@ -13,11 +12,15 @@ interface StatusPageProps {
 }
 
 export default async function StatusPage({ params, searchParams }: StatusPageProps) {
-    const { status: statusParam } = await params;
+    const [
+        { status: statusParam },
+        { page: pageParam }
+    ] = await Promise.all([params, searchParams]);
     const status = normalizeStatus(statusParam);
 
-    const page = Math.max(1, Number(searchParams?.page) || 1);
-    const skip = (page - 1) * PAGE_SIZE;
+    const pageSize = 10;
+    const page = Number(pageParam) > 0 ? Number(pageParam) : 1;
+    const skip = (page - 1) * pageSize;
 
     if (!status) {
         redirect('/tasks');
@@ -26,8 +29,9 @@ export default async function StatusPage({ params, searchParams }: StatusPagePro
     const [totalTask, taskList] = await Promise.all([
         getTotalTask({ filter: { status: status as EnumTaskStatus } }),
         getTaskList({
-            limit: PAGE_SIZE,
+            limit: pageSize,
             skip,
+            sort: SortFindManyTaskInput.IdDesc,
             filter: { status: status as EnumTaskStatus },
         })
     ]);

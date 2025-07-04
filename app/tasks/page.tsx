@@ -7,7 +7,8 @@ interface TasksPageProps {
 }
 
 export default async function TasksPage({ searchParams }: TasksPageProps) {
-    const page = Math.max(1, Number(searchParams?.page) || 1);
+    const { page: pageParam } = await searchParams;
+    const page = Math.max(1, Number(pageParam) || 1);
     const skip = (page - 1) * PAGE_SIZE;
 
     const [totalTask, taskList] = await Promise.all([
