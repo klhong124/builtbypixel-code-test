@@ -2,20 +2,15 @@
 
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/utils/cn';
-import { useTheme } from 'next-themes';
 import { useState } from 'react';
-import { Moon, Sun, Filter, X } from 'lucide-react';
+import { Filter, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/logo';
 import { TaskFilter } from './tasks.filter';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export function TasksHeader() {
-    const { theme, setTheme } = useTheme();
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
-
-    const toggleTheme = () => {
-        setTheme(theme === 'dark' ? 'light' : 'dark');
-    };
 
     return (
         <>
@@ -47,15 +42,7 @@ export function TasksHeader() {
                         <Filter className="w-4 h-4 mr-2" aria-hidden="true" />
                         Filter
                     </Button>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={toggleTheme}
-                        aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-                        className={cn('p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors')}
-                    >
-                        {theme === 'dark' ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
-                    </Button>
+                    <ThemeToggle />
                 </div>
             </motion.header>
 
