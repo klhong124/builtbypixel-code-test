@@ -1,8 +1,6 @@
-import { Suspense } from 'react';
 import { cn } from '@/utils/cn';
 import { TasksHeader } from './components/tasks.header';
 import { TasksSidebar } from './components/tasks.sidebar';
-import { TaskLoading } from './components/task.loading';
 
 export default async function TasksLayout({ children }: { children: React.ReactNode }) {
 
@@ -17,9 +15,7 @@ export default async function TasksLayout({ children }: { children: React.ReactN
 
                 {/* Main List Content */}
                 <main className={cn("flex-1 flex flex-col gap-4")}>
-                    <Suspense fallback={<TaskLoading />}>
-                        {children}
-                    </Suspense>
+                    {children}
                 </main>
             </div>
         </div>
